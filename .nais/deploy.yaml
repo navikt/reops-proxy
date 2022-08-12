@@ -1,0 +1,34 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: reops-proxy
+  namespace: team-researchops
+  labels:
+    team: team-researchops
+spec:
+  image: {{ image }}
+  port: 8080
+  team: team-researchops
+  accessPolicy:
+    outbound:
+      external:
+        - host: api.siteimprove.com
+        - host: api.eu.siteimprove.com
+        - host: siteimprove.com
+        - host: raw.githubusercontent.com
+        - host: analytics.eu.amplitude.com
+  ingresses:
+    - https://reops-proxy.intern.nav.no
+  liveness:
+    path: /isAlive
+    initialDelay: 20
+  readiness:
+    path: /isReady
+    initialDelay: 20
+  env:
+    - name: SITEIMPROVE
+      value: {{SITEIMPROVE}}
+    - name: AMPLITUDE_100000009
+      value: {{AMPLITUDE_100000009}}
+    - name: REOPS
+      value: {{REOPS}}

@@ -1,0 +1,9 @@
+
+.DS_Store
+.idea/misc.xml
+.idea/modules.xml
+.idea/reops-proxy.iml
+.idea/vcs.xml
+.env
+
+/node_modules
