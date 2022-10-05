@@ -30,7 +30,7 @@ spec:
       value: {{SITEIMPROVE}}
     - name: AMPLITUDE_100000009
       value: {{AMPLITUDE_100000009}}
-    - name: AMPLITUDE_100000009
+    - name: AMPLITUDE_100000264
       value: {{AMPLITUDE_100000264}}
     - name: REOPS
       value: {{REOPS}}
