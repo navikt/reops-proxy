@@ -36,6 +36,7 @@ app.get('/amplitude/api/*', (req, res) => {
             headers: {Authorization: "Basic " + process.env.AMPLITUDE_100000009}
         };
         axios.get(apiUrl + req.url, options).then(function (response) {
+            console.log(apiUrl + req.url)
             res.json(response.data)
         }).catch(function (error) {
             console.log(error)
