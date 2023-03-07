@@ -45,6 +45,8 @@ jobs:
           SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
           AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
           AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
+          AMPLITUDE_100000243: ${{ secrets.AMPLITUDE_100000243 }}
+          AMPLITUDE_100000244: ${{ secrets.AMPLITUDE_100000244 }}
           REOPS: ${{ secrets.REOPS }}
           EOF
       - name: Deploy to prod

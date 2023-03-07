@@ -64,6 +64,44 @@ app.get('/amplitude/100000264/api/*', (req, res) => {
     }
 });
 
+// Amplitude Prosjekt: PO Arbeidsplassen - dev
+app.get('/amplitude/100000243/api/*', (req, res) => {
+    let apiUrl = "https://analytics.eu.amplitude.com";
+    req.url = req.url.replace(/\/amplitude\/100000243/, '')
+    if (req.url.match(/deletions/) || req.url.match(/taxonomy/) || req.url.match(/release/) || req.url.match(/scim/) || req.url.match(/batch/)) {
+        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
+    } else {
+        const options = {
+            headers: {Authorization: "Basic " + process.env.AMPLITUDE_100000243}
+        };
+        axios.get(apiUrl + req.url, options).then(function (response) {
+            res.json(response.data)
+        }).catch(function (error) {
+            console.log(error)
+            res.end("Kunne ikke koble til Amplitude APIet: " + error)
+        });
+    }
+});
+
+// Amplitude Prosjekt: PO Arbeidsplassen - prod
+app.get('/amplitude/100000244/api/*', (req, res) => {
+    let apiUrl = "https://analytics.eu.amplitude.com";
+    req.url = req.url.replace(/\/amplitude\/100000244/, '')
+    if (req.url.match(/deletions/) || req.url.match(/taxonomy/) || req.url.match(/release/) || req.url.match(/scim/) || req.url.match(/batch/)) {
+        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
+    } else {
+        const options = {
+            headers: {Authorization: "Basic " + process.env.AMPLITUDE_100000244}
+        };
+        axios.get(apiUrl + req.url, options).then(function (response) {
+            res.json(response.data)
+        }).catch(function (error) {
+            console.log(error)
+            res.end("Kunne ikke koble til Amplitude APIet: " + error)
+        });
+    }
+});
+
 app.get('/reops', (req, res) => {
     res.end("it works")
 });
