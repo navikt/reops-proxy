@@ -27,80 +27,70 @@ app.get('/siteimprov*', (req, res) => {
 
 // Amplitude Prosjekt: NAV.no - Produksjon
 app.get('/amplitude/api/*', (req, res) => {
-    let apiUrl = "https://analytics.eu.amplitude.com";
-    req.url = req.url.replace(/\/amplitude/, '')
-    if (req.url.match(/deletions/) || req.url.match(/taxonomy/) || req.url.match(/release/) || req.url.match(/scim/) || req.url.match(/batch/)) {
-        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
-    } else {
-        const options = {
-            headers: {Authorization: "Basic " + process.env.AMPLITUDE_100000009}
-        };
-        axios.get(apiUrl + req.url, options).then(function (response) {
-            console.log(apiUrl + req.url)
-            res.json(response.data)
-        }).catch(function (error) {
-            console.log(error)
-            res.end("Kunne ikke koble til Amplitude APIet: " + error)
-        });
-    }
+    const requestUrl = req.url.replace(/\/amplitude/, '')
+    const authToken = process.env.AMPLITUDE_100000009
+    amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: PO Arbeid - prod
 app.get('/amplitude/100000264/api/*', (req, res) => {
-    let apiUrl = "https://analytics.eu.amplitude.com";
-    req.url = req.url.replace(/\/amplitude\/100000264/, '')
-    if (req.url.match(/deletions/) || req.url.match(/taxonomy/) || req.url.match(/release/) || req.url.match(/scim/) || req.url.match(/batch/)) {
-        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
-    } else {
-        const options = {
-            headers: {Authorization: "Basic " + process.env.AMPLITUDE_100000264}
-        };
-        axios.get(apiUrl + req.url, options).then(function (response) {
-            res.json(response.data)
-        }).catch(function (error) {
-            console.log(error)
-            res.end("Kunne ikke koble til Amplitude APIet: " + error)
-        });
-    }
+    const requestUrl = req.url.replace(/\/amplitude\/100000264/, '')
+    const authToken = process.env.AMPLITUDE_100000264
+    amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: PO Arbeidsplassen - dev
 app.get('/amplitude/100000243/api/*', (req, res) => {
-    let apiUrl = "https://analytics.eu.amplitude.com";
-    req.url = req.url.replace(/\/amplitude\/100000243/, '')
-    if (req.url.match(/deletions/) || req.url.match(/taxonomy/) || req.url.match(/release/) || req.url.match(/scim/) || req.url.match(/batch/)) {
-        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
-    } else {
-        const options = {
-            headers: {Authorization: "Basic " + process.env.AMPLITUDE_100000243}
-        };
-        axios.get(apiUrl + req.url, options).then(function (response) {
-            res.json(response.data)
-        }).catch(function (error) {
-            console.log(error)
-            res.end("Kunne ikke koble til Amplitude APIet: " + error)
-        });
-    }
+    const requestUrl = req.url.replace(/\/amplitude\/100000243/, '')
+    const authToken = process.env.AMPLITUDE_100000243
+    amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: PO Arbeidsplassen - prod
 app.get('/amplitude/100000244/api/*', (req, res) => {
-    let apiUrl = "https://analytics.eu.amplitude.com";
-    req.url = req.url.replace(/\/amplitude\/100000244/, '')
-    if (req.url.match(/deletions/) || req.url.match(/taxonomy/) || req.url.match(/release/) || req.url.match(/scim/) || req.url.match(/batch/)) {
-        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
-    } else {
-        const options = {
-            headers: {Authorization: "Basic " + process.env.AMPLITUDE_100000244}
-        };
-        axios.get(apiUrl + req.url, options).then(function (response) {
-            res.json(response.data)
-        }).catch(function (error) {
-            console.log(error)
-            res.end("Kunne ikke koble til Amplitude APIet: " + error)
-        });
-    }
+    const requestUrl = req.url.replace(/\/amplitude\/100000244/, '')
+    const authToken = process.env.AMPLITUDE_100000244
+    amplitudeProxy(authToken, requestUrl, res)
 });
+
+const amplitudeProxy = (authToken, requestUrl, proxyResponse) => {
+    let apiUrl = "https://analytics.eu.amplitude.com";
+    const options = {headers: {Authorization: "Basic " + authToken}};
+
+    if (proxyRouteIsBlocked(requestUrl)) {
+        proxyResponse.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
+    } else if (requestUrl.match(/export/)) {
+        fetchAmplitudeExportData(apiUrl + requestUrl, options, proxyResponse)
+    } else {
+        fetchAmplitudeJsonData(apiUrl + requestUrl, options, proxyResponse)
+    }
+}
+
+const proxyRouteIsBlocked = (requestUrl) => {
+    const blockedRoutes = [/deletions/, /taxonomy/, /release/, /scim/, /batch/]
+    return blockedRoutes.some((route) => requestUrl.match(route))
+}
+
+const fetchAmplitudeExportData = (url, options, proxyResponse) => {
+    axios.get(url, {...options, responseType: "stream"})
+        .then((resp) => {
+            resp.data.on('data', data => proxyResponse.write(data));
+            resp.data.on('end', () => proxyResponse.end());
+        })
+        .catch((error) => {
+            console.log(error)
+            proxyResponse.end("Kunne ikke koble til Amplitude APIet: " + error)
+        });
+}
+
+const fetchAmplitudeJsonData = (url, options, proxyResponse) => {
+    axios.get(url, options)
+        .then((resp) => proxyResponse.json(resp.data))
+        .catch((error) => {
+            console.log(error)
+            proxyResponse.end("Kunne ikke koble til Amplitude APIet: " + error)
+        });
+}
 
 app.get('/reops', (req, res) => {
     res.end("it works")
