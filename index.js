@@ -79,6 +79,8 @@ const fetchAmplitudeExportData = (url, options, proxyResponse) => {
         })
         .catch((error) => {
             console.log(error)
+            const statusCode = error.response ? error.response.status : 500
+            proxyResponse.status(statusCode)
             proxyResponse.end("Kunne ikke koble til Amplitude APIet: " + error)
         });
 }
@@ -88,6 +90,8 @@ const fetchAmplitudeJsonData = (url, options, proxyResponse) => {
         .then((resp) => proxyResponse.json(resp.data))
         .catch((error) => {
             console.log(error)
+            const statusCode = error.response ? error.response.status : 500
+            proxyResponse.status(statusCode)
             proxyResponse.end("Kunne ikke koble til Amplitude APIet: " + error)
         });
 }
