@@ -34,7 +34,7 @@ spec:
       value: {{AMPLITUDE_100000264}}
     - name: AMPLITUDE_100000243
       value: {{AMPLITUDE_100000243}}
-    - name: AMPLITUDE_100000244
-      value: {{AMPLITUDE_100000244}}
+    - name: AMPLITUDE_100002286
+      value: {{AMPLITUDE_100002286}}
     - name: REOPS
       value: {{REOPS}}
