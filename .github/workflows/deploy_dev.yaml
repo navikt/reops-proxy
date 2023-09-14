@@ -47,6 +47,7 @@ jobs:
           AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
           AMPLITUDE_100000243: ${{ secrets.AMPLITUDE_100000243 }}
           AMPLITUDE_100000244: ${{ secrets.AMPLITUDE_100000244 }}
+          AMPLITUDE_100002286: ${{ secrets.AMPLITUDE_100002286 }}
           REOPS: ${{ secrets.REOPS }}
           EOF
       - name: Deploy to prod
