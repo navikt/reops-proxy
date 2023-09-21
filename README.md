@@ -79,6 +79,6 @@ https://reops-proxy.intern.nav.no/amplitude/api/3/chart/63ty1xg/query
 
 # Henvendelser og veiledning
 
-Spørsmål knyttet til koden eller prosjektet kan stilles
+Spørsmål knyttet til koden kan stilles
 som [issues her på GitHub](https://github.com/navikt/reops-proxy/issues). Henvendelser kan sendes via Slack i
 kanalen [#researchops](https://nav-it.slack.com/archives/C02UGFS2J4B).
