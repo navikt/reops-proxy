@@ -14,6 +14,8 @@ spec:
       rules:
         - application: ia-key-metrics
           namespace: teamia
+        - application: memu-data
+          namespace: fugl-fonix
     outbound:
       external:
         - host: api.siteimprove.com
