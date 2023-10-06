@@ -14,7 +14,7 @@ spec:
       rules:
         - application: ia-key-metrics
           namespace: teamia
-        - application: memu-stat
+        - application: memu-data
           namespace: fugl-fonix
     outbound:
       external:
