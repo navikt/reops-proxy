@@ -60,6 +60,20 @@ app.get('/amplitude/100002286/api/*', (req, res) => {
     amplitudeProxy(authToken, requestUrl, res)
 });
 
+// Amplitude Prosjekt: Speil - dev
+app.get('/amplitude/100003868/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100003868/, '')
+    const authToken = process.env.AMPLITUDE_100003868
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Speil - prod
+app.get('/amplitude/100003867/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100003867/, '')
+    const authToken = process.env.AMPLITUDE_100003867
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
 const amplitudeProxy = (authToken, requestUrl, proxyResponse) => {
     let apiUrl = "https://analytics.eu.amplitude.com";
     const options = {headers: {Authorization: "Basic " + authToken}};
