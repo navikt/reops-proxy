@@ -1,4 +1,4 @@
-FROM ghcr.io/navikt/baseimages/node-express:20
+FROM ghcr.io/navikt/baseimages/node-express:18
 
 ENV CI=true
 
