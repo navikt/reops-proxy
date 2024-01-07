@@ -1,4 +1,4 @@
-FROM navikt/node-express:12
+FROM navikt/node-express:latest
 
 ENV CI=true
 
