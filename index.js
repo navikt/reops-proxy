@@ -60,6 +60,13 @@ app.get('/amplitude/100002286/api/*', (req, res) => {
     amplitudeProxy(authToken, requestUrl, res)
 });
 
+// Amplitude Prosjekt: Aksel - prod
+app.get('/amplitude/100002016/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100002016/, '')
+    const authToken = process.env.AMPLITUDE_100002016
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
 // Amplitude Prosjekt: Speil - dev
 app.get('/amplitude/100003868/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100003868/, '')
