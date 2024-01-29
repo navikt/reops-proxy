@@ -8,6 +8,13 @@ metadata:
 spec:
   image: {{ image }}
   port: 8080
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 100m
+      memory: 256Mi
   accessPolicy:
     inbound:
       rules:
