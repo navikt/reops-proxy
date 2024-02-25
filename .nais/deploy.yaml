@@ -57,6 +57,6 @@ spec:
     - name: REOPS
       value: {{REOPS}}
   ingresses:
-  { { #each ingresses as |url|}}
-      - {{url } }
+  {{#each ingresses as |url|}}
+     - {{url}}
   {{/each}}
