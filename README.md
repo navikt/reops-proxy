@@ -12,7 +12,11 @@ ResearchOps Proxy hjelper team hente ut data fra Amplitude og Siteimprove.
 
 ## Proxy endepunkt
 
+### Prod GCP
 https://reops-proxy.intern.nav.no/<api_navn>/<api_endepunkt>
+
+### Dev GCP
+https://reops-proxy.intern.dev.nav.no/<api_navn>/<api_endepunkt>
 
 ## Slik får du tilgang til proxyen
 
