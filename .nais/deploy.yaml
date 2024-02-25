@@ -29,6 +29,10 @@ spec:
         - host: siteimprove.com
         - host: raw.githubusercontent.com
         - host: analytics.eu.amplitude.com
+  ingresses:
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}
   liveness:
     path: /isAlive
     initialDelay: 20
@@ -56,7 +60,3 @@ spec:
       value: {{AMPLITUDE_100002016}}
     - name: REOPS
       value: {{REOPS}}
-  ingresses:
-  {{#each ingresses as |url|}}
-     - {{url}}
-  {{/each}}

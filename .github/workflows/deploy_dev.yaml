@@ -45,6 +45,7 @@ jobs:
       - name: Generate nais variables
         run: |
           cat > .nais/dev-gcp.yaml <<EOF
+          ingresses: - 'https://reops-proxy.intern.nav.no'
           SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
           AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
           AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
