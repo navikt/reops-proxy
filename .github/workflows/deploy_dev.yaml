@@ -44,7 +44,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Generate nais variables
         run: |
-          cat > .nais/vars.yaml <<EOF
+          cat > .nais/dev-gcp.yaml <<EOF
           SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
           AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
           AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
@@ -63,7 +63,7 @@ jobs:
           CLUSTER: dev-gcp
           RESOURCE: .nais/deploy.yaml
           VAR: image=${{ env.IMAGE }}
-          VARS: .nais/vars.yaml
+          VARS: .nais/dev-gcp.yaml
 
   deploy-prod:
     name: Deploy to prod-gcp
@@ -75,7 +75,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Generate nais variables
         run: |
-          cat > .nais/vars.yaml <<EOF
+          cat > .nais/prod-gcp.yaml <<EOF
           SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
           AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
           AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
@@ -94,4 +94,4 @@ jobs:
           CLUSTER: prod-gcp
           RESOURCE: .nais/deploy.yaml
           VAR: image=${{ env.IMAGE }}
-          VARS: .nais/vars.yaml
+          VARS: .nais/prod-gcp.yaml
