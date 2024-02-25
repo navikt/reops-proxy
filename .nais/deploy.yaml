@@ -30,8 +30,9 @@ spec:
         - host: raw.githubusercontent.com
         - host: analytics.eu.amplitude.com
   ingresses:
-    - https://reops-proxy.intern.nav.no
-    - https://reops-proxy.intern.dev.nav.no
+  {{#each ingresses as |url|}}
+     - {{url}}
+  {{/each}}
   liveness:
     path: /isAlive
     initialDelay: 20
