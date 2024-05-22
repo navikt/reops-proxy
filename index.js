@@ -4,6 +4,10 @@ const axios = require('axios');
 const cors = require("cors");
 const {config} = require("./config/config");
 let app = express();
+const Bottleneck = require('bottleneck');
+const limiter = new Bottleneck({
+    minTime: 1000 // 1 request per second
+});
 
 app.use(cors())
 
@@ -55,11 +59,10 @@ app.get('/amplitude/100000244/api/*', (req, res) => {
 
 // Amplitude Prosjekt: MEMU - prod
 app.get('/amplitude/100002286/api/*', (req, res) => {
-        const requestUrl = req.url.replace(/\/amplitude\/100002286/, '')
-        const authToken = process.env.AMPLITUDE_100002286
-        amplitudeProxy(authToken, requestUrl, res)
+    const requestUrl = req.url.replace(/\/amplitude\/100002286/, '')
+    const authToken = process.env.AMPLITUDE_100002286
+    limiter.schedule(() => amplitudeProxy(authToken, requestUrl, res))
 });
-
 // Amplitude Prosjekt: Aksel - prod
 app.get('/amplitude/100002016/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100002016/, '')
