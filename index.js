@@ -1,9 +1,14 @@
 require("dotenv").config();
 const express = require('express');
+const Bottleneck = require("bottleneck");
 const axios = require('axios');
 const cors = require("cors");
 const {config} = require("./config/config");
 let app = express();
+
+const limiter = new Bottleneck({
+  minTime: 1000, // 1 request per second
+});
 
 let requestCounter = {};
 
@@ -74,10 +79,12 @@ app.get('/amplitude/100000244/api/*', rateLimiter, (req, res) => {
 });
 
 // Amplitude Prosjekt: MEMU - prod
-app.get('/amplitude/100002286/api/*', rateLimiter, (req, res) => {
-    const requestUrl = req.url.replace(/\/amplitude\/100002286/, '')
-    const authToken = process.env.AMPLITUDE_100002286
-    amplitudeProxy(authToken, requestUrl, res)
+app.get('/amplitude/100002286/api/*', (req, res) => {
+    limiter.schedule(() => {
+        const requestUrl = req.url.replace(/\/amplitude\/100002286/, '')
+        const authToken = process.env.AMPLITUDE_100002286
+        amplitudeProxy(authToken, requestUrl, res)
+    });
 });
 
 // Amplitude Prosjekt: Aksel - prod
