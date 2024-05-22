@@ -65,6 +65,7 @@ jobs:
 
   deploy-prod:
     name: Deploy to prod-gcp
+    needs: build
 #    needs:  deploy-dev
     environment: production
     runs-on: ubuntu-latest
