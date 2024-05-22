@@ -32,40 +32,40 @@ jobs:
           push: true
           tags: ${{ env.IMAGE }}
 
-  deploy-dev:
-    name: Deploy to dev-gcp
-    needs: build
-    environment: production
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v4
-      - name: Generate nais variables
-        run: |
-          cat > .nais/vars.yaml <<EOF
-          SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
-          AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
-          AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
-          AMPLITUDE_100000243: ${{ secrets.AMPLITUDE_100000243 }}
-          AMPLITUDE_100000244: ${{ secrets.AMPLITUDE_100000244 }}
-          AMPLITUDE_100002286: ${{ secrets.AMPLITUDE_100002286 }}
-          AMPLITUDE_100003868: ${{ secrets.AMPLITUDE_100003868 }}
-          AMPLITUDE_100003867: ${{ secrets.AMPLITUDE_100003867 }}
-          AMPLITUDE_100002016: ${{ secrets.AMPLITUDE_100002016 }}
-          REOPS: ${{ secrets.REOPS }}
-          EOF
-      - name: Deploy to prod
-        uses: nais/deploy/actions/deploy@v2
-        env:
-          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
-          CLUSTER: dev-gcp
-          RESOURCE: .nais/dev-gcp.yaml
-          VAR: image=${{ env.IMAGE }}
-          VARS: .nais/vars.yaml
+#  deploy-dev:
+#    name: Deploy to dev-gcp
+#    needs: build
+#    environment: production
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout branch
+#        uses: actions/checkout@v4
+#      - name: Generate nais variables
+#        run: |
+#          cat > .nais/vars.yaml <<EOF
+#          SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
+#          AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
+#          AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
+#          AMPLITUDE_100000243: ${{ secrets.AMPLITUDE_100000243 }}
+#          AMPLITUDE_100000244: ${{ secrets.AMPLITUDE_100000244 }}
+#          AMPLITUDE_100002286: ${{ secrets.AMPLITUDE_100002286 }}
+#          AMPLITUDE_100003868: ${{ secrets.AMPLITUDE_100003868 }}
+#          AMPLITUDE_100003867: ${{ secrets.AMPLITUDE_100003867 }}
+#          AMPLITUDE_100002016: ${{ secrets.AMPLITUDE_100002016 }}
+#          REOPS: ${{ secrets.REOPS }}
+#          EOF
+#      - name: Deploy to prod
+#        uses: nais/deploy/actions/deploy@v2
+#        env:
+#          APIKEY: ${{ secrets.NAIS_DEPLOY_APIKEY }}
+#          CLUSTER: dev-gcp
+#          RESOURCE: .nais/dev-gcp.yaml
+#          VAR: image=${{ env.IMAGE }}
+#          VARS: .nais/vars.yaml
 
   deploy-prod:
     name: Deploy to prod-gcp
-    needs:  deploy-dev
+#    needs:  deploy-dev
     environment: production
     runs-on: ubuntu-latest
     steps:
