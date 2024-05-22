@@ -5,6 +5,9 @@ metadata:
   namespace: team-researchops
   labels:
     team: team-researchops
+  annotations:
+    nginx.ingress.kubernetes.io/cors-allow-origin: https://websta.ansatt.nav.no
+    nginx.ingress.kubernetes.io/enable-cors: "true"
 spec:
   image: {{ image }}
   port: 8080
@@ -40,10 +43,6 @@ spec:
   readiness:
     path: /isReady
     initialDelay: 20
-  metadata:
-    annotations:
-      nginx.ingress.kubernetes.io/cors-allow-origin: https://websta.ansatt.nav.no
-      nginx.ingress.kubernetes.io/enable-cors: "true"
   env:
     - name: SITEIMPROVE
       value: {{SITEIMPROVE}}
