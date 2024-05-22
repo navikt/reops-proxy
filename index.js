@@ -53,49 +53,49 @@ app.get('/amplitude/api/*', rateLimiter, (req, res) => {
 });
 
 // Amplitude Prosjekt: PO Arbeid - prod
-app.get('/amplitude/100000264/api/*', (req, res) => {
+app.get('/amplitude/100000264/api/*', rateLimiter, (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100000264/, '')
     const authToken = process.env.AMPLITUDE_100000264
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: PO Arbeidsplassen - dev
-app.get('/amplitude/100000243/api/*', (req, res) => {
+app.get('/amplitude/100000243/api/*', rateLimiter, (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100000243/, '')
     const authToken = process.env.AMPLITUDE_100000243
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: PO Arbeidsplassen - prod
-app.get('/amplitude/100000244/api/*', (req, res) => {
+app.get('/amplitude/100000244/api/*', rateLimiter, (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100000244/, '')
     const authToken = process.env.AMPLITUDE_100000244
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: MEMU - prod
-app.get('/amplitude/100002286/api/*', (req, res) => {
+app.get('/amplitude/100002286/api/*', rateLimiter, (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100002286/, '')
     const authToken = process.env.AMPLITUDE_100002286
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: Aksel - prod
-app.get('/amplitude/100002016/api/*', (req, res) => {
+app.get('/amplitude/100002016/api/*', rateLimiter, (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100002016/, '')
     const authToken = process.env.AMPLITUDE_100002016
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: Speil - dev
-app.get('/amplitude/100003868/api/*', (req, res) => {
+app.get('/amplitude/100003868/api/*', rateLimiter, (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100003868/, '')
     const authToken = process.env.AMPLITUDE_100003868
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: Speil - prod
-app.get('/amplitude/100003867/api/*', (req, res) => {
+app.get('/amplitude/100003867/api/*', rateLimiter, (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100003867/, '')
     const authToken = process.env.AMPLITUDE_100003867
     amplitudeProxy(authToken, requestUrl, res)
