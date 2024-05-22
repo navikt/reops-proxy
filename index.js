@@ -1,34 +1,9 @@
 require("dotenv").config();
 const express = require('express');
-const Bottleneck = require("bottleneck");
 const axios = require('axios');
 const cors = require("cors");
 const {config} = require("./config/config");
 let app = express();
-
-const limiter = new Bottleneck({
-  minTime: 1000, // 1 request per second
-});
-
-let requestCounter = {};
-
-const rateLimiter = (req, res, next) => {
-    const ip = req.ip;
-    const currentTime = Date.now();
-
-    if (!requestCounter[ip]) {
-        requestCounter[ip] = {count: 1, startTime: currentTime};
-    } else if (currentTime - requestCounter[ip].startTime < 1000) {
-        if (requestCounter[ip].count > 1) {
-            return res.status(429).send("Too many requests created from this IP, please try again after a second");
-        }
-        requestCounter[ip].count++;
-    } else {
-        requestCounter[ip] = {count: 1, startTime: currentTime};
-    }
-
-    next();
-};
 
 app.use(cors())
 
@@ -51,28 +26,28 @@ app.get('/siteimprov*', (req, res) => {
 });
 
 // Amplitude Prosjekt: NAV.no - Produksjon
-app.get('/amplitude/api/*', rateLimiter, (req, res) => {
+app.get('/amplitude/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude/, '')
     const authToken = process.env.AMPLITUDE_100000009
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: PO Arbeid - prod
-app.get('/amplitude/100000264/api/*', rateLimiter, (req, res) => {
+app.get('/amplitude/100000264/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100000264/, '')
     const authToken = process.env.AMPLITUDE_100000264
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: PO Arbeidsplassen - dev
-app.get('/amplitude/100000243/api/*', rateLimiter, (req, res) => {
+app.get('/amplitude/100000243/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100000243/, '')
     const authToken = process.env.AMPLITUDE_100000243
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: PO Arbeidsplassen - prod
-app.get('/amplitude/100000244/api/*', rateLimiter, (req, res) => {
+app.get('/amplitude/100000244/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100000244/, '')
     const authToken = process.env.AMPLITUDE_100000244
     amplitudeProxy(authToken, requestUrl, res)
@@ -80,29 +55,27 @@ app.get('/amplitude/100000244/api/*', rateLimiter, (req, res) => {
 
 // Amplitude Prosjekt: MEMU - prod
 app.get('/amplitude/100002286/api/*', (req, res) => {
-    limiter.schedule(() => {
         const requestUrl = req.url.replace(/\/amplitude\/100002286/, '')
         const authToken = process.env.AMPLITUDE_100002286
         amplitudeProxy(authToken, requestUrl, res)
-    });
 });
 
 // Amplitude Prosjekt: Aksel - prod
-app.get('/amplitude/100002016/api/*', rateLimiter, (req, res) => {
+app.get('/amplitude/100002016/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100002016/, '')
     const authToken = process.env.AMPLITUDE_100002016
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: Speil - dev
-app.get('/amplitude/100003868/api/*', rateLimiter, (req, res) => {
+app.get('/amplitude/100003868/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100003868/, '')
     const authToken = process.env.AMPLITUDE_100003868
     amplitudeProxy(authToken, requestUrl, res)
 });
 
 // Amplitude Prosjekt: Speil - prod
-app.get('/amplitude/100003867/api/*', rateLimiter, (req, res) => {
+app.get('/amplitude/100003867/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100003867/, '')
     const authToken = process.env.AMPLITUDE_100003867
     amplitudeProxy(authToken, requestUrl, res)
