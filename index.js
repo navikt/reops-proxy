@@ -1,16 +1,29 @@
 require("dotenv").config();
-const rateLimit = require("express-rate-limit");
 const express = require('express');
 const axios = require('axios');
 const cors = require("cors");
 const {config} = require("./config/config");
 let app = express();
 
-const amplitudeLimiter = rateLimit({
-  windowMs: 1000, // 1 second
-  max: 1, // limit each IP to 1 requests per windowMs
-  message: "Too many requests created from this IP, please try again after a second"
-});
+let requestCounter = {};
+
+const rateLimiter = (req, res, next) => {
+    const ip = req.ip;
+    const currentTime = Date.now();
+
+    if (!requestCounter[ip]) {
+        requestCounter[ip] = {count: 1, startTime: currentTime};
+    } else if (currentTime - requestCounter[ip].startTime < 1000) {
+        if (requestCounter[ip].count > 1) {
+            return res.status(429).send("Too many requests created from this IP, please try again after a second");
+        }
+        requestCounter[ip].count++;
+    } else {
+        requestCounter[ip] = {count: 1, startTime: currentTime};
+    }
+
+    next();
+};
 
 app.use(cors())
 
@@ -33,7 +46,7 @@ app.get('/siteimprov*', (req, res) => {
 });
 
 // Amplitude Prosjekt: NAV.no - Produksjon
-app.get('/amplitude/api/*', amplitudeLimiter, (req, res) => {
+app.get('/amplitude/api/*', rateLimiter, (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude/, '')
     const authToken = process.env.AMPLITUDE_100000009
     amplitudeProxy(authToken, requestUrl, res)
