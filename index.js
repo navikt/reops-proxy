@@ -32,6 +32,13 @@ app.get('/amplitude/api/*', (req, res) => {
     amplitudeProxy(authToken, requestUrl, res)
 });
 
+// Amplitude Prosjekt: NAV.no - Produksjon 2.0
+app.get('/amplitude/100000009/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100000009/, '')
+    const authToken = process.env.AMPLITUDE_100000009
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
 // Amplitude Prosjekt: PO Arbeid - prod
 app.get('/amplitude/100000264/api/*', (req, res) => {
     const requestUrl = req.url.replace(/\/amplitude\/100000264/, '')
