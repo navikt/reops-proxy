@@ -52,6 +52,15 @@ jobs:
           AMPLITUDE_100003868: ${{ secrets.AMPLITUDE_100003868 }}
           AMPLITUDE_100003867: ${{ secrets.AMPLITUDE_100003867 }}
           AMPLITUDE_100002016: ${{ secrets.AMPLITUDE_100002016 }}
+          AMPLITUDE_100005528: ${{ secrets.AMPLITUDE_100005528 }}
+          AMPLITUDE_100002233: ${{ secrets.AMPLITUDE_100002233 }}
+          AMPLITUDE_100001607: ${{ secrets.AMPLITUDE_100001607 }}
+          AMPLITUDE_100002226: ${{ secrets.AMPLITUDE_100002226 }}
+          AMPLITUDE_100004122: ${{ secrets.AMPLITUDE_100004122}}
+          AMPLITUDE_100005544: ${{ secrets.AMPLITUDE_100005544}}
+          AMPLITUDE_100000251: ${{ secrets.AMPLITUDE_100000251}}
+          AMPLITUDE_100000965 ${{ secrets.AMPLITUDE_100000965}}
+          AMPLITUDE_100002261 ${{ secrets.AMPLITUDE_100002261}}
           REOPS: ${{ secrets.REOPS }}
           EOF
       - name: Deploy to prod
@@ -83,6 +92,15 @@ jobs:
           AMPLITUDE_100003868: ${{ secrets.AMPLITUDE_100003868 }}
           AMPLITUDE_100003867: ${{ secrets.AMPLITUDE_100003867 }}
           AMPLITUDE_100002016: ${{ secrets.AMPLITUDE_100002016 }}
+          AMPLITUDE_100005528: ${{ secrets.AMPLITUDE_100005528 }}
+          AMPLITUDE_100002233: ${{ secrets.AMPLITUDE_100002233 }}
+          AMPLITUDE_100001607: ${{ secrets.AMPLITUDE_100001607 }}
+          AMPLITUDE_100002226: ${{ secrets.AMPLITUDE_100002226 }}
+          AMPLITUDE_100004122: ${{ secrets.AMPLITUDE_100004122}}
+          AMPLITUDE_100005544: ${{ secrets.AMPLITUDE_100005544}}
+          AMPLITUDE_100000251: ${{ secrets.AMPLITUDE_100000251}}
+          AMPLITUDE_100000965 ${{ secrets.AMPLITUDE_100000965}}
+          AMPLITUDE_100002261 ${{ secrets.AMPLITUDE_100002261}}
           REOPS: ${{ secrets.REOPS }}
           EOF
       - name: Deploy to prod

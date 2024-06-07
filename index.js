@@ -88,6 +88,69 @@ app.get('/amplitude/100003867/api/*', (req, res) => {
     amplitudeProxy(authToken, requestUrl, res)
 });
 
+// Amplitude Prosjekt: Delta - prod
+app.get('/amplitude/100005528/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100005528/, '')
+    const authToken = process.env.AMPLITUDE_100005528
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Work in norway - prod
+app.get('/amplitude/100002233/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100002233/, '')
+    const authToken = process.env.AMPLITUDE_100002233
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Kunnskapsbanken - prod
+app.get('/amplitude/100001607/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100001607/, '')
+    const authToken = process.env.AMPLITUDE_100001607
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Idebanken - prod
+app.get('/amplitude/100002226/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100002226/, '')
+    const authToken = process.env.AMPLITUDE_100002226
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Arbeid og velferd - prod
+app.get('/amplitude/100004122/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100004122/, '')
+    const authToken = process.env.AMPLITUDE_100004122
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Teknologiradar - prod
+app.get('/amplitude/100005544/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100005544/, '')
+    const authToken = process.env.AMPLITUDE_100005544
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Det som betyr noe - prod
+app.get('/amplitude/100000251/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100000251/, '')
+    const authToken = process.env.AMPLITUDE_100000251
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Hjelpemiddeldatabasen - prod
+app.get('/amplitude/100000965/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100000965/, '')
+    const authToken = process.env.AMPLITUDE_100000965
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
+// Amplitude Prosjekt: Navet - prod
+app.get('/amplitude/100002261/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100002261/, '')
+    const authToken = process.env.AMPLITUDE_100002261
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
 const amplitudeProxy = (authToken, requestUrl, proxyResponse) => {
     let apiUrl = "https://analytics.eu.amplitude.com";
     const options = {headers: {Authorization: "Basic " + authToken}};
@@ -133,6 +196,12 @@ const fetchAmplitudeJsonData = (url, options, proxyResponse) => {
 
 app.get('/reops', (req, res) => {
     res.end("it works")
+});
+
+app.use(cors()).get('/config', (req, res) => {
+    let authsecret = `Basic ${Buffer.from("123:123", "utf-8").toString("base64")}`
+    console.log(authsecret)
+    res.sendStatus(200)
 });
 
 app.get("/isAlive", (req, res) => res.sendStatus(200));

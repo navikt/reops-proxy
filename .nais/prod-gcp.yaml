@@ -62,5 +62,23 @@ spec:
       value: {{AMPLITUDE_100003867}}
     - name: AMPLITUDE_100002016
       value: {{AMPLITUDE_100002016}}
+    - name: AMPLITUDE_100005528
+      value: {{AMPLITUDE_100005528}}
+    - name: AMPLITUDE_100002233
+      value: {{AMPLITUDE_100002233}}
+    - name: AMPLITUDE_100001607
+      value: {{AMPLITUDE_100001607}}
+    - name: AMPLITUDE_100002226
+      value: {{AMPLITUDE_100002226}}
+    - name: AMPLITUDE_100004122
+      value: {{AMPLITUDE_100004122}}
+    - name: AMPLITUDE_100005544
+      value: {{AMPLITUDE_100005544}}
+    - name: AMPLITUDE_100000251
+      value: {{AMPLITUDE_100000251}}
+    - name: AMPLITUDE_100000965
+      value: {{AMPLITUDE_100000965}}
+    - name: AMPLITUDE_100002261
+      value: {{AMPLITUDE_100002261}}
     - name: REOPS
       value: {{REOPS}}
