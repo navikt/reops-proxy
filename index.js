@@ -151,6 +151,13 @@ app.get('/amplitude/100002261/api/*', (req, res) => {
     amplitudeProxy(authToken, requestUrl, res)
 });
 
+// Amplitude Prosjekt: Mangfoldimai- prod
+app.get('/amplitude/100002287/api/*', (req, res) => {
+    const requestUrl = req.url.replace(/\/amplitude\/100002287/, '')
+    const authToken = process.env.AMPLITUDE_100002287
+    amplitudeProxy(authToken, requestUrl, res)
+});
+
 const amplitudeProxy = (authToken, requestUrl, proxyResponse) => {
     let apiUrl = "https://analytics.eu.amplitude.com";
     const options = {headers: {Authorization: "Basic " + authToken}};
