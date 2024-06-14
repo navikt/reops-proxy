@@ -215,6 +215,17 @@ const fetchAmplitudeJsonData = (url, options, proxyResponse) => {
         });
 }
 
+app.get('/getnav', (req, res) => {
+    axios.get('https://www.nav.no/')
+        .then(response => {
+            res.send(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).send('Error occurred while fetching data from nav.no');
+        });
+});
+
 app.get('/reops', (req, res) => {
     res.end("it works")
 });
