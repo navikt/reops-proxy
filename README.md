@@ -19,9 +19,6 @@ ResearchOps Proxy hjelper team hente ut data fra Amplitude og Siteimprove.
 ### Dev GCP
 https://reops-proxy.intern.dev.nav.no/<api_navn>/<api_endepunkt>
 
-
-Proxyen er nå også tilgjengelig via https://reops-proxy.ansatt.nav.no.
-
 ## Slik får du tilgang til proxyen
 
 1. Logg inn med naisdevice lokalt på maskinen din
