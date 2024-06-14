@@ -32,6 +32,7 @@ spec:
         - host: api.siteimprove.com
         - host: api.eu.siteimprove.com
         - host: siteimprove.com
+        - host: nav.no
         - host: raw.githubusercontent.com
         - host: analytics.eu.amplitude.com
   ingresses:
