@@ -11,7 +11,7 @@ RUN yarn add dotenv
 RUN yarn add axios
 RUN yarn add cors
 
-EXPOSE 8081
+EXPOSE 8080
 
 COPY index.js /app/
 COPY /config/. /app/config/.

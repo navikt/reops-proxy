@@ -215,14 +215,23 @@ const fetchAmplitudeJsonData = (url, options, proxyResponse) => {
         });
 }
 
-app.get('/getnav', (req, res) => {
-    axios.get('https://www.nav.no/')
+app.get('/url/*', (req, res) => {
+    // Decode the URL component
+    let urlToFetch = decodeURIComponent(req.params[0]);
+
+    // Check if the URL starts with http:// or https://
+    if (!urlToFetch.match(/^https?:\/\//)) {
+        urlToFetch = 'http://' + urlToFetch;
+    }
+
+    // Perform the GET request to the extracted URL
+    axios.get(urlToFetch)
         .then(response => {
             res.send(response.data);
         })
         .catch(error => {
             console.error(error);
-            res.status(500).send('Error occurred while fetching data from nav.no');
+            res.status(500).send(`Error occurred while fetching data from ${urlToFetch}`);
         });
 });
 
@@ -240,6 +249,6 @@ app.get("/isAlive", (req, res) => res.sendStatus(200));
 app.get("/isReady", (req, res) => res.sendStatus(200));
 app.get("/", (req, res) => res.sendStatus(200));
 
-app.listen(8081, function () {
-    console.log("Express Started on Port 8081");
+app.listen(8080, function () {
+    console.log("Express Started");
 });
