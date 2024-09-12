@@ -35,10 +35,17 @@ app.get('/umami/api/*', (req, res) => {
             headers: {Authorization: "Basic " + process.env.UMAMI},
         };
         axios.get(apiUrl + req.url, options).then(function (response) {
-            res.json(response.data)
+            // Convert date-time strings to milliseconds
+            response.data = response.data.map(item => {
+                if (item.time) {
+                    item.timeInMilliseconds = new Date(item.time).getTime();
+                }
+                return item;
+            });
+            res.json(response.data);
         }).catch(function (error) {
-            console.log(error)
-            res.end("Kunne ikke koble til Umami APIet: " + error)
+            console.log(error);
+            res.end("Kunne ikke koble til Umami APIet: " + error);
         });
     }
 });
