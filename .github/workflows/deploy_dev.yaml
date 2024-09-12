@@ -44,6 +44,7 @@ jobs:
         run: |
           cat > .nais/vars.yaml <<EOF
           SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
+          UMAMI: ${{ secrets.UMAMI }}
           AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
           AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
           AMPLITUDE_100000243: ${{ secrets.AMPLITUDE_100000243 }}
@@ -87,6 +88,7 @@ jobs:
         run: |
           cat > .nais/vars.yaml <<EOF
           SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
+          UMAMI: ${{ secrets.UMAMI }}
           AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
           AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
           AMPLITUDE_100000243: ${{ secrets.AMPLITUDE_100000243 }}

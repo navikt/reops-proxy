@@ -40,6 +40,8 @@ spec:
   env:
     - name: SITEIMPROVE
       value: {{SITEIMPROVE}}
+    - name: UMAMI
+      value: {{UMAMI}}
     - name: AMPLITUDE_100000009
       value: {{AMPLITUDE_100000009}}
     - name: AMPLITUDE_100000264
