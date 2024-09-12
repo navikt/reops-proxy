@@ -22,6 +22,10 @@ spec:
           namespace: teamia
         - application: memu-data
           namespace: fugl-fonix
+        - application: reops-websta
+          namespace: team-researchops
+        - application: reops-umami-beta
+          namespace: team-researchops
     outbound:
       external:
         - host: api.siteimprove.com
