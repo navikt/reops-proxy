@@ -27,21 +27,28 @@ app.get('/siteimprov*', (req, res) => {
 
 app.get('/umami/api/*', (req, res) => {
     let apiUrl = "https://umami.intern.nav.no/api";
-    req.url = req.url.replace(/\/umami\/api/, '')
+    req.url = req.url.replace(/\/umami\/api/, '');
     if (req.url.match(/users/)) {
-        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
+        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.");
     } else {
         const options = {
-            headers: {Authorization: "Basic " + process.env.UMAMI},
+            headers: { Authorization: "Basic " + process.env.UMAMI
+            },
         };
         axios.get(apiUrl + req.url, options).then(function (response) {
-            // Convert date-time strings to milliseconds
-            response.data = response.data.map(item => {
-                if (item.time) {
-                    item.timeInMilliseconds = new Date(item.time).getTime();
-                }
-                return item;
-            });
+            if (Array.isArray(response.data)) {
+                // Convert date-time strings to milliseconds
+                response.data = response.data.map(item => {
+                    if (item.time) {
+                        const dateObject = new Date(item.time);
+                        // Use getTime() to get milliseconds since epoch
+                        item.timeInMilliseconds = dateObject.getTime();
+                        // Optionally, delete the original "time" property
+                        delete item.time;
+                    }
+                    return item;
+                });
+            }
             res.json(response.data);
         }).catch(function (error) {
             console.log(error);
