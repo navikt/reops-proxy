@@ -36,6 +36,7 @@ spec:
         - host: siteimprove.com
         - host: nav.no
         - host: umami.ansatt.nav.no
+        - host: umami.intern.nav.no
         - host: raw.githubusercontent.com
         - host: analytics.eu.amplitude.com
   ingresses:
