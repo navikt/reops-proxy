@@ -26,26 +26,8 @@ app.get('/siteimprov*', (req, res) => {
 });
 
 app.get('/umami/api/*', (req, res) => {
-    let apiUrl = "https://umami.ansatt.nav.no/api";
-    req.url = req.url.replace(/\/umami\/api/, '')
-    if (req.url.match(/users/)) {
-        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
-    } else {
-        const options = {
-            headers: {Authorization: "Basic " + process.env.UMAMI},
-        };
-        axios.get(apiUrl + req.url, options).then(function (response) {
-            res.json(response.data)
-        }).catch(function (error) {
-            console.log(error)
-            res.end("Kunne ikke koble til Umami APIet: " + error)
-        });
-    }
-});
-
-app.get('/internumami/api/*', (req, res) => {
     let apiUrl = "https://umami.intern.nav.no/api";
-    req.url = req.url.replace(/\/internumami\/api/, '')
+    req.url = req.url.replace(/\/umami\/api/, '')
     if (req.url.match(/users/)) {
         res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.")
     } else {
