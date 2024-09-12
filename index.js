@@ -32,30 +32,70 @@ app.get('/umami/api/*', (req, res) => {
         res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.");
     } else {
         const options = {
-            headers: { Authorization: "Basic " + process.env.UMAMI
-            },
+            headers: { Authorization: "Basic " + process.env.UMAMI },
         };
-        axios.get(apiUrl + req.url, options).then(function (response) {
-            if (Array.isArray(response.data)) {
-                // Convert date-time strings to milliseconds
-                response.data = response.data.map(item => {
-                    if (item.time) {
-                        const dateObject = new Date(item.time);
-                        // Use getTime() to get milliseconds since epoch
-                        item.timeInMilliseconds = dateObject.getTime();
-                        // Optionally, delete the original "time" property
-                        delete item.time;
-                    }
-                    return item;
-                });
-            }
-            res.json(response.data);
-        }).catch(function (error) {
-            console.log(error);
-            res.end("Kunne ikke koble til Umami APIet: " + error);
-        });
+        axios.get(apiUrl + req.url, options)
+            .then(function (response) {
+                res.json(response.data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                res.end("Kunne ikke koble til Umami APIet: " + error);
+            });
     }
 });
+
+app.get('/umami/v2/api/*', (req, res) => {
+    let apiUrl = "https://umami.intern.nav.no/api";
+    req.url = req.url.replace(/\/umami\/v2\/api/, '');
+    if (req.url.match(/users/)) {
+        res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.");
+    } else {
+        const options = {
+            headers: { Authorization: "Basic " + process.env.UMAMI },
+        };
+        axios.get(apiUrl + req.url, options)
+            .then(function (response) {
+                let data = response.data;
+                // Convert date strings to milliseconds
+                data = convertDatesToMilliseconds(data);
+                res.json(data);
+            })
+            .catch(function (error) {
+                console.log(error);
+                res.end("Kunne ikke koble til Umami APIet: " + error);
+            });
+    }
+});
+
+function convertDatesToMilliseconds(obj) {
+    if (obj === null || typeof obj !== 'object') {
+        return obj;
+    }
+
+    if (Array.isArray(obj)) {
+        return obj.map(item => convertDatesToMilliseconds(item));
+    }
+
+    const result = {};
+    for (const key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'string') {
+                const date = new Date(obj[key]);
+                if (!isNaN(date.getTime())) {  // Check if it's a valid date
+                    result[key] = date.getTime(); // Convert to milliseconds
+                } else {
+                    result[key] = obj[key];
+                }
+            } else if (typeof obj[key] === 'object') {
+                result[key] = convertDatesToMilliseconds(obj[key]);
+            } else {
+                result[key] = obj[key];
+            }
+        }
+    }
+    return result;
+}
 
 // Amplitude Prosjekt: NAV.no - Produksjon
 app.get('/amplitude/api/*', (req, res) => {
