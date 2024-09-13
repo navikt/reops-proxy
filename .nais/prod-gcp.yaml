@@ -27,6 +27,10 @@ spec:
           namespace: fugl-fonix
         - application: reops-websta
           namespace: team-researchops
+        - application: delta-frontend
+          namespace: delta
+        - application: reops-felgen
+          namespace: team-researchops
     outbound:
       external:
         - host: api.siteimprove.com
