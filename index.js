@@ -48,6 +48,42 @@ app.get('/umami/api/*', (req, res) => {
 app.get('/umami/v2/api/*', (req, res) => {
     let apiUrl = "https://umami.intern.nav.no/api";
     req.url = req.url.replace(/\/umami\/v2\/api/, '');
+
+    // Check if the URL contains the parameter endsAt=yesterday
+    if (req.url.includes('endAt=yesterday')) {
+        // Get the current date
+        let yesterday = new Date();
+        // Set the date to yesterday
+        yesterday.setDate(yesterday.getDate() - 1);
+        // Set the time to midnight
+        yesterday.setHours(0, 0, 0, 0);
+        // Get the timestamp in milliseconds
+        let yesterdayMidnight = yesterday.getTime();
+        // Replace 'yesterday' with the timestamp
+        req.url = req.url.replace('endAt=yesterday', `endAt=${yesterdayMidnight}`);
+    }
+
+    if (req.url.includes('endAt=now')) {
+        // Get the current date and time
+        let now = new Date();
+        // Get the timestamp in milliseconds
+        let nowTimestamp = now.getTime();
+        // Replace 'now' with the timestamp
+        req.url = req.url.replace('endAt=now', `endAt=${nowTimestamp}`);
+    }
+
+    if (req.url.includes('range=day')) {
+        // Get the current date and time
+        let now = new Date();
+        // Get the timestamp in milliseconds
+        let nowTimestamp = now.getTime();
+        // Calculate the timestamp for 360 days ago
+        let startAtTimestamp = new Date(now.setDate(now.getDate() - 196)).getTime();
+        // Append the parameters to the URL
+        req.url += `&startAt=${startAtTimestamp}&endAt=${nowTimestamp}&unit=day`;
+        console.log(req.url);
+    }
+
     if (req.url.match(/users/)) {
         res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.");
     } else {
