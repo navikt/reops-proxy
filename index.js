@@ -84,6 +84,20 @@ app.get('/umami/v2/api/*', (req, res) => {
         console.log(req.url);
     }
 
+    if (req.url.includes('range=hour')) {
+        // Get the current date and time
+        let now = new Date();
+        // Get the timestamp in milliseconds
+        let nowTimestamp = now.getTime();
+        // Calculate the timestamp for 48 hours ago
+        let startAtTimestamp = new Date(now.setHours(now.getHours() - 48)).getTime();
+        // Append the parameters to the URL
+        req.url += `&startAt=${startAtTimestamp}&endAt=${nowTimestamp}&unit=hour`;
+        console.log(req.url);
+    }
+
+
+
     if (req.url.match(/users/)) {
         res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.");
     } else {
