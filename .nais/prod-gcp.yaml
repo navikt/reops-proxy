@@ -31,6 +31,8 @@ spec:
           namespace: delta
         - application: reops-felgen
           namespace: team-researchops
+        - application: reops-leak
+          namespace: team-researchops
     outbound:
       external:
         - host: api.siteimprove.com
