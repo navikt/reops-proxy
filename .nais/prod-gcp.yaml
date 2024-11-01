@@ -21,8 +21,8 @@ spec:
   accessPolicy:
     inbound:
       rules:
-        - application: ia-key-metrics
-          namespace: teamia
+        - application: arbeidsgiver-datafortelling
+          namespace: arbeidsgiver-data
         - application: memu-data
           namespace: fugl-fonix
         - application: reops-websta
