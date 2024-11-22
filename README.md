@@ -9,6 +9,7 @@ ResearchOps Proxy hjelper team hente ut data fra Amplitude, Umami og Siteimprove
 
 - Siteimprove
 - Amplitude
+- Umami
 
 ## Proxy endepunkt
 
