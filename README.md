@@ -11,7 +11,7 @@ ResearchOps Proxy hjelper team hente ut data fra Amplitude, Umami og Siteimprove
 - Amplitude
 - Umami
 
-## Proxy endepunkt
+## Proxy endepunkter
 
 ### Prod GCP
 - https://reops-proxy.intern.nav.no/<api_navn>/<api_endepunkt>
