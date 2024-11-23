@@ -30,55 +30,9 @@ jobs:
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
 
-  deploy-dev:
-    name: Deploy to dev-gcp
-    needs: build
-    environment: production
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      id-token: write
-    steps:
-      - name: Checkout branch
-        uses: actions/checkout@v4
-      - name: Generate nais variables
-        run: |
-          cat > .nais/vars.yaml <<EOF
-          SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
-          UMAMI: ${{ secrets.UMAMI }}
-          AMPLITUDE_100000009: ${{ secrets.AMPLITUDE_100000009 }}
-          AMPLITUDE_100000264: ${{ secrets.AMPLITUDE_100000264 }}
-          AMPLITUDE_100000243: ${{ secrets.AMPLITUDE_100000243 }}
-          AMPLITUDE_100000244: ${{ secrets.AMPLITUDE_100000244 }}
-          AMPLITUDE_100002286: ${{ secrets.AMPLITUDE_100002286 }}
-          AMPLITUDE_100003868: ${{ secrets.AMPLITUDE_100003868 }}
-          AMPLITUDE_100003867: ${{ secrets.AMPLITUDE_100003867 }}
-          AMPLITUDE_100002016: ${{ secrets.AMPLITUDE_100002016 }}
-          AMPLITUDE_100005528: ${{ secrets.AMPLITUDE_100005528 }}
-          AMPLITUDE_100002233: ${{ secrets.AMPLITUDE_100002233 }}
-          AMPLITUDE_100001607: ${{ secrets.AMPLITUDE_100001607 }}
-          AMPLITUDE_100002226: ${{ secrets.AMPLITUDE_100002226 }}
-          AMPLITUDE_100004122: ${{ secrets.AMPLITUDE_100004122 }}
-          AMPLITUDE_100005544: ${{ secrets.AMPLITUDE_100005544 }}
-          AMPLITUDE_100000251: ${{ secrets.AMPLITUDE_100000251 }}
-          AMPLITUDE_100000965: ${{ secrets.AMPLITUDE_100000965 }}
-          AMPLITUDE_100002261: ${{ secrets.AMPLITUDE_100002261 }}
-          AMPLITUDE_100002287: ${{ secrets.AMPLITUDE_100002287}}
-          AMPLITUDE_100004171: ${{ secrets.AMPLITUDE_100004171}}
-          AMPLITUDE_100006162: ${{ secrets.AMPLITUDE_100006162 }}
-          REOPS: ${{ secrets.REOPS }}
-          EOF
-      - name: Deploy to prod
-        uses: nais/deploy/actions/deploy@v2
-        env:
-          CLUSTER: dev-gcp
-          RESOURCE: .nais/dev-gcp.yaml
-          VAR: image=${{ needs.build.outputs.image }},version=${{ github.sha }}
-          VARS: .nais/vars.yaml
-
   deploy-prod:
+    if: github.ref == 'refs/heads/master'
     name: Deploy to prod-gcp
-    needs:  deploy-dev
     environment: production
     runs-on: ubuntu-latest
     permissions:
