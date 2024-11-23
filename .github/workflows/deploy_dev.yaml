@@ -33,6 +33,7 @@ jobs:
   deploy-prod:
     if: github.ref == 'refs/heads/master'
     name: Deploy to prod-gcp
+    needs: build
     environment: production
     runs-on: ubuntu-latest
     permissions:
