@@ -10,7 +10,9 @@ app.use(cors())
 app.get('/me', (req, res) => {
     const apiUrl = "https://graph.microsoft.com/v1.0/me/";
     const options = {
-        headers: { Authorization: `Bearer ${process.env.MS_GRAPH_TOKEN}` },
+        headers: {
+            ...req.headers // Forward headers from the client, including Authorization
+        },
     };
 
     axios.get(apiUrl, options)
