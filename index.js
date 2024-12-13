@@ -3,12 +3,12 @@ const express = require('express');
 const axios = require('axios');
 const cors = require("cors");
 const {config} = require("./config/config");
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 let app = express();
 
 app.use(cors())
 
-app.get('/me', (req, res) => {
+/*app.get('/me', (req, res) => {
     const apiUrl = "https://graph.microsoft.com/v1.0/me/";
     const options = {
         headers: {
@@ -24,9 +24,9 @@ app.get('/me', (req, res) => {
             console.error(error);
             res.status(500).send("Error occurred while fetching data from Microsoft Graph API: " + error);
         });
-});
+});*/
 
-app.get('/user-groups', (req, res) => {
+/*app.get('/user-groups', (req, res) => {
     const token = req.headers.authorization?.split(' ')[1] || '';
     let userGroups = [];
 
@@ -38,7 +38,7 @@ app.get('/user-groups', (req, res) => {
     }
 
     res.json({ groups: userGroups });
-});
+});*/
 
 app.get('/siteimprov*', (req, res) => {
     let apiUrl = "https://api.siteimprove.com/v2";
