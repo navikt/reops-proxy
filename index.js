@@ -7,6 +7,22 @@ let app = express();
 
 app.use(cors())
 
+app.get('/me', (req, res) => {
+    const apiUrl = "https://graph.microsoft.com/v1.0/me/";
+    const options = {
+        headers: { Authorization: `Bearer ${process.env.MS_GRAPH_TOKEN}` },
+    };
+
+    axios.get(apiUrl, options)
+        .then(response => {
+            res.json(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).send("Error occurred while fetching data from Microsoft Graph API: " + error);
+        });
+});
+
 app.get('/siteimprov*', (req, res) => {
     let apiUrl = "https://api.siteimprove.com/v2";
     req.url = req.url.replace(/\/siteimprove/, '')
