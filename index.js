@@ -3,6 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require("cors");
 const {config} = require("./config/config");
+const jwt_decode = require('jwt-decode');
 let app = express();
 
 app.use(cors())
@@ -23,6 +24,19 @@ app.get('/me', (req, res) => {
             console.error(error);
             res.status(500).send("Error occurred while fetching data from Microsoft Graph API: " + error);
         });
+});
+
+app.get('/user-groups', (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1] || '';
+    let userGroups = [];
+
+    try {
+        userGroups = jwt_decode(token).groups;
+    } catch (error) {
+        return res.status(401).json({ error: 'Invalid token' });
+    }
+
+    res.json({ groups: userGroups });
 });
 
 app.get('/siteimprov*', (req, res) => {
