@@ -3,7 +3,7 @@ const express = require('express');
 const axios = require('axios');
 const cors = require("cors");
 const {config} = require("./config/config");
-const jwt_decode = require('jwt-decode');
+const jwt = require('jsonwebtoken');
 let app = express();
 
 app.use(cors())
@@ -31,7 +31,8 @@ app.get('/user-groups', (req, res) => {
     let userGroups = [];
 
     try {
-        userGroups = jwt_decode(token).groups;
+        const decodedToken = jwt.decode(token);
+        userGroups = decodedToken.groups;
     } catch (error) {
         return res.status(401).json({ error: 'Invalid token' });
     }
