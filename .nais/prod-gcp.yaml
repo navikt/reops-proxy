@@ -16,8 +16,8 @@ spec:
       cpu: 100m
       memory: 256Mi
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 500m
+      memory: 128Mi
   accessPolicy:
     inbound:
       rules:
