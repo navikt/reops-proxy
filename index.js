@@ -61,6 +61,11 @@ app.get('/siteimprov*', (req, res) => {
 app.get('/umami/api/*', (req, res) => {
     let apiUrl = "https://umami.intern.nav.no/api";
     req.url = req.url.replace(/\/umami\/api/, '');
+
+    // Append pageSize=1000 to the URL
+    const separator = req.url.includes('?') ? '&' : '?';
+    req.url += `${separator}pageSize=1000`;
+
     if (req.url.match(/users/)) {
         res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.");
     } else {
