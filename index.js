@@ -64,7 +64,7 @@ app.get('/umami/api/*', (req, res) => {
 
     // Append pageSize=1000 to the URL
     const separator = req.url.includes('?') ? '&' : '?';
-    req.url += `${separator}pageSize=1000`;
+    req.url += `${separator}pageSize=200`;
 
     if (req.url.match(/users/)) {
         res.end("APIet har blitt blokkert av Team ResearchOps i NAV, ta kontakt med oss for hjelp.");
