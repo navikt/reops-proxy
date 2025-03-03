@@ -1,7 +1,7 @@
 ResearchOps Proxy
 ================
 
-ResearchOps Proxy hjelper team hente ut data fra Amplitude, Umami og Siteimprove.
+ResearchOps Proxy hjelper team hente ut data fra Amplitude, Umami og Siteimprove..
 
 ---
 
