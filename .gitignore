@@ -4,6 +4,8 @@ package-lock.json
 .idea/modules.xml
 .idea/reops-proxy.iml
 .idea/vcs.xml
+.idea
+.idea/*
 .env
 
 /node_modules
