@@ -1,19 +1,17 @@
-FROM ghcr.io/navikt/baseimages/node-express:18
-
-ENV CI=true
-
-COPY package.json .
-RUN yarn install --unsafe-perm --no-update-notifier --no-fund
-
+### builder
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:22-dev AS builder
 WORKDIR /app
 
-RUN yarn add dotenv
-RUN yarn add axios
-RUN yarn add cors
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+COPY . .
+
+### runtime
+FROM europe-north1-docker.pkg.dev/cgr-nav/pull-through/nav.no/node:22-slim
+WORKDIR /app
+
+COPY --from=builder /app /app
 
 EXPOSE 8080
-
-COPY index.js /app/
-COPY /config/. /app/config/.
-
-CMD ["node", "/app/index.js"]
+CMD ["index.js"]

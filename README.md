@@ -1,15 +1,23 @@
 ResearchOps Proxy
 ================
 
-ResearchOps Proxy hjelper team hente ut data fra Amplitude, Umami og Siteimprove.
+ResearchOps Proxy hjelper team hente ut data fra Siteimprove.
+
+## Running locally
+Install dependencies and start the proxy with the default scripts provided in `package.json`:
+
+```bash
+yarn install
+yarn start
+```
+
+Use `yarn run dev` if you prefer to run with `nodemon` for hot reloads.
 
 ---
 
 # APIer
 
 - Siteimprove
-- Amplitude
-- Umami
 
 ## Proxy endepunkter
 
@@ -50,38 +58,6 @@ Dataene vises i JSON format.
 
 Følgende henter ut en liste over alle nettsider lagt til i Siteimprove:
 https://reops-proxy.intern.nav.no/siteimprove/sites
-
-## Amplitude
-
-### Proxy endepunkt
-
-https://reops-proxy.intern.nav.no/amplitude/<amplitude_api_endepunkt>
-
-### Tilgjengelige Amplitude APIer med GET requests
-
-- [Dashhboard REST API](https://www.docs.developers.amplitude.com/analytics/apis/dashboard-rest-api/)
-- [Behavioral Cohorts API](https://www.docs.developers.amplitude.com/analytics/apis/behavioral-cohorts-api/)
-- [Chart Annotations API](https://www.docs.developers.amplitude.com/analytics/apis/chart-annotations-api/)
-- [Export API](https://www.docs.developers.amplitude.com/analytics/apis/export-api/)
-
-### Amplitude prosjekttilgang
-
-Proxyen gir tilgang til Amplitude prosjektet "Nav.no - Produksjon" som inneholder data fra nav.no-domenet i produksjon.
-Ved ønske om tilgang til andre prosjekter, ta kontakt med Team ResearchOps på Slack i
-kanalen [#researchops](https://nav-it.slack.com/archives/C02UGFS2J4B).
-
-### Dokumentasjon
-
-[Amplitude API Dokumentasjon](https://developers.amplitude.com/docs/dashboard-rest-api)
-
-### Data format
-
-Dataene vises i JSON format.
-
-### Eksempel på bruk av API
-
-Følgende henter ut data tilknyttet en graf i Amplitude:
-https://reops-proxy.intern.nav.no/amplitude/api/3/chart/63ty1xg/query
 
 # Henvendelser og veiledning
 

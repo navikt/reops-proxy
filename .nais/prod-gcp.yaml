@@ -41,10 +41,7 @@ spec:
         - host: api.eu.siteimprove.com
         - host: siteimprove.com
         - host: nav.no
-        - host: umami.ansatt.nav.no
-        - host: umami.intern.nav.no
         - host: raw.githubusercontent.com
-        - host: analytics.eu.amplitude.com
   ingresses:
     - https://reops-proxy.intern.nav.no
     - https://reops-proxy.ansatt.nav.no
@@ -57,47 +54,5 @@ spec:
   env:
     - name: SITEIMPROVE
       value: {{SITEIMPROVE}}
-    - name: UMAMI
-      value: {{UMAMI}}
-    - name: AMPLITUDE_100000009
-      value: {{AMPLITUDE_100000009}}
-    - name: AMPLITUDE_100000264
-      value: {{AMPLITUDE_100000264}}
-    - name: AMPLITUDE_100000243
-      value: {{AMPLITUDE_100000243}}
-    - name: AMPLITUDE_100000244
-      value: {{AMPLITUDE_100000244}}
-    - name: AMPLITUDE_100002286
-      value: {{AMPLITUDE_100002286}}
-    - name: AMPLITUDE_100003868
-      value: {{AMPLITUDE_100003868}}
-    - name: AMPLITUDE_100003867
-      value: {{AMPLITUDE_100003867}}
-    - name: AMPLITUDE_100002016
-      value: {{AMPLITUDE_100002016}}
-    - name: AMPLITUDE_100005528
-      value: {{AMPLITUDE_100005528}}
-    - name: AMPLITUDE_100002233
-      value: {{AMPLITUDE_100002233}}
-    - name: AMPLITUDE_100001607
-      value: {{AMPLITUDE_100001607}}
-    - name: AMPLITUDE_100002226
-      value: {{AMPLITUDE_100002226}}
-    - name: AMPLITUDE_100004122
-      value: {{AMPLITUDE_100004122}}
-    - name: AMPLITUDE_100005544
-      value: {{AMPLITUDE_100005544}}
-    - name: AMPLITUDE_100000251
-      value: {{AMPLITUDE_100000251}}
-    - name: AMPLITUDE_100000965
-      value: {{AMPLITUDE_100000965}}
-    - name: AMPLITUDE_100002261
-      value: {{AMPLITUDE_100002261}}
-    - name: AMPLITUDE_100002287
-      value: {{AMPLITUDE_100002287}}
-    - name: AMPLITUDE_100004171
-      value: {{AMPLITUDE_100004171}}
-    - name: AMPLITUDE_100006162
-      value: {{AMPLITUDE_100006162}}
     - name: REOPS
       value: {{REOPS}}
