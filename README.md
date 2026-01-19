@@ -37,6 +37,7 @@ https://reops-proxy.intern.dev.nav.no/<api_navn>/<api_endepunkt>
 kanalen [#researchops](https://nav-it.slack.com/archives/C02UGFS2J4B) så åpner vi opp for appen din.
 
 ## Siteimprove
+https://api.siteimprove.com/v2/documentation
 
 ### Proxy endepunkt
 
