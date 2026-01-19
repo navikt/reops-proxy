@@ -38,7 +38,7 @@ app.use('/siteimprove', (req, res) => {
         });
 });
 
-app.get("/", (req, res) => res.sendStatus(200));
+app.get("/isAlive", (req, res) => res.sendStatus(200));
 app.get("/isReady", (req, res) => res.sendStatus(200));
 app.get("/", (req, res) => res.sendStatus(200));
 
