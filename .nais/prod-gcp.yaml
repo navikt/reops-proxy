@@ -5,9 +5,6 @@ metadata:
   namespace: team-researchops
   labels:
     team: team-researchops
-  annotations:
-    nginx.ingress.kubernetes.io/cors-allow-origin: "https://websta.ansatt.nav.no,https://webapps.ansatt.nav.no,https://webapps.nav.no,https://webapps.intern.nav.no,https://felgen.ansatt.nav.no,https://innblikk.ansatt.nav.no,https://startumami.ansatt.nav.no"
-    nginx.ingress.kubernetes.io/enable-cors: "true"
 spec:
   image: {{ image }}
   port: 8080
@@ -25,15 +22,9 @@ spec:
           namespace: arbeidsgiver-data
         - application: memu-data
           namespace: fugl-fonix
-        - application: reops-websta
-          namespace: team-researchops
         - application: umami-start
           namespace: team-researchops
-        - application: delta-frontend
-          namespace: delta
         - application: reops-felgen
-          namespace: team-researchops
-        - application: reops-leak
           namespace: team-researchops
     outbound:
       external:
