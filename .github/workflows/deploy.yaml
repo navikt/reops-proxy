@@ -30,6 +30,32 @@ jobs:
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
 
+  deploy-dev:
+    if: github.ref == 'refs/heads/master'
+    name: Deploy to dev-gcp
+    needs: build
+    environment: production
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Generate nais variables
+        run: |
+          cat > .nais/dev-vars.yaml <<EOF
+          SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
+          REOPS: ${{ secrets.REOPS }}
+          EOF
+      - name: Deploy to dev
+        uses: nais/deploy/actions/deploy@v2
+        env:
+          CLUSTER: dev-gcp
+          RESOURCE: .nais/dev-gcp.yaml
+          VAR: image=${{ needs.build.outputs.image }},version=${{ github.sha }}
+          VARS: .nais/dev-vars.yaml
+
   deploy-prod:
     if: github.ref == 'refs/heads/master'
     name: Deploy to prod-gcp
@@ -44,7 +70,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Generate nais variables
         run: |
-          cat > .nais/vars.yaml <<EOF
+          cat > .nais/prod-vars.yaml <<EOF
           SITEIMPROVE: ${{ secrets.SITEIMPROVE }}
           REOPS: ${{ secrets.REOPS }}
           EOF
@@ -54,4 +80,4 @@ jobs:
           CLUSTER: prod-gcp
           RESOURCE: .nais/prod-gcp.yaml
           VAR: image=${{ needs.build.outputs.image }},version=${{ github.sha }}
-          VARS: .nais/vars.yaml
+          VARS: .nais/prod-vars.yaml

@@ -1,0 +1,49 @@
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: reops-proxy
+  namespace: team-researchops
+  labels:
+    team: team-researchops
+spec:
+  image: {{ image }}
+  port: 8080
+  resources:
+    limits:
+      cpu: 100m
+      memory: 256Mi
+    requests:
+      cpu: 50m
+      memory: 128Mi
+  accessPolicy:
+    inbound:
+      rules:
+        - application: arbeidsgiver-datafortelling
+          namespace: arbeidsgiver-data
+        - application: memu-data
+          namespace: fugl-fonix
+        - application: umami-start
+          namespace: team-researchops
+        - application: reops-felgen
+          namespace: team-researchops
+    outbound:
+      external:
+        - host: api.siteimprove.com
+        - host: api.eu.siteimprove.com
+        - host: siteimprove.com
+        - host: nav.no
+        - host: raw.githubusercontent.com
+  ingresses:
+    - https://reops-proxy.intern.dev.nav.no
+    - https://reops-proxy.ansatt.dev.nav.no
+  liveness:
+    path: /isAlive
+    initialDelay: 20
+  readiness:
+    path: /isReady
+    initialDelay: 20
+  env:
+    - name: SITEIMPROVE
+      value: {{SITEIMPROVE}}
+    - name: REOPS
+      value: {{REOPS}}
