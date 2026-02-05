@@ -23,9 +23,6 @@ spec:
         - application: memu-data
           namespace: fugl-fonix
         - application: umami-start
-          namespace: team-researchops
-        - application: reops-felgen
-          namespace: team-researchops
     outbound:
       external:
         - host: api.siteimprove.com
