@@ -15,7 +15,7 @@ on:
 
 jobs:
   build:
-    name: Build and push docker conatainer
+    name: Build and push docker container
     runs-on: ubuntu-latest
     environment: production
     permissions:
