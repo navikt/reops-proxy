@@ -3,6 +3,15 @@ name: Deploy to gcp
 on:
   push:
     branches: [ master ]
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to deploy to"
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
 
 jobs:
   build:
@@ -14,11 +23,7 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: actions/checkout@v4
-      - name: Set up node
-        uses: actions/setup-node@v4
-        with:
-          node-version: "20.x"
+      - uses: actions/checkout@v6
       - name: 'Build and push'
         uses: nais/docker-build-push@v0
         id: docker-build-push
@@ -31,7 +36,7 @@ jobs:
       image: ${{ steps.docker-build-push.outputs.image }}
 
   deploy-dev:
-    if: github.ref == 'refs/heads/master'
+    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
     name: Deploy to dev-gcp
     needs: build
     environment: production
@@ -41,7 +46,7 @@ jobs:
       id-token: write
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Generate nais variables
         run: |
           cat > .nais/dev-vars.yaml <<EOF
@@ -57,17 +62,17 @@ jobs:
           VARS: .nais/dev-vars.yaml
 
   deploy-prod:
-    if: github.ref == 'refs/heads/master'
+    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod'
     name: Deploy to prod-gcp
     needs: build
     environment: production
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       id-token: write
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Generate nais variables
         run: |
           cat > .nais/prod-vars.yaml <<EOF
@@ -81,3 +86,11 @@ jobs:
           RESOURCE: .nais/prod-gcp.yaml
           VAR: image=${{ needs.build.outputs.image }},version=${{ github.sha }}
           VARS: .nais/prod-vars.yaml
+      - name: "Create deployment tag"
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          TAG_NAME="prod-$(date -u +'%Y.%m.%d-%H%M%S')"
+          git tag -a "$TAG_NAME" -m "Production deployment of ${{ github.sha }}"
+          git push origin "$TAG_NAME"
