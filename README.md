@@ -7,11 +7,11 @@ ResearchOps Proxy hjelper team hente ut data fra Siteimprove.
 Install dependencies and start the proxy with the default scripts provided in `package.json`:
 
 ```bash
-yarn install
-yarn start
+pnpm install
+pnpm start
 ```
 
-Use `yarn run dev` if you prefer to run with `nodemon` for hot reloads.
+Use `pnpm run dev` if you prefer to run with `nodemon` for hot reloads.
 
 ---
 

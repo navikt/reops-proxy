@@ -1,0 +1,10 @@
+node_modules
+.git
+.pnpm-store
+*.log
+npm-debug.log*
+.env*
+!.env.example
+.vscode
+.idea
+coverage
