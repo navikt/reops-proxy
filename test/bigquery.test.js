@@ -192,5 +192,18 @@ test("whitelist tolerates blocked keywords and semicolons inside string literals
 test("whitelist rejects SELECT with no recognizable table only when a table ref exists and is disallowed", () => {
     // SELECT without any table ref is allowed (e.g. SELECT 1) — harmless.
     assert.doesNotThrow(() => assertAllowedQuery("SELECT 1"));
-    assert.throws(() => assertAllowedQuery("SELECT * FROM `other-project.custom_dataset.secret_table`"), /not allowlisted/);
+    assert.throws(
+        () => assertAllowedQuery("SELECT * FROM `team-researchops-dev-4396.custom_dataset.secret_table`"),
+        /not allowlisted/,
+    );
+});
+
+test("whitelist rejects queries against any project other than dev (prod boundary)", () => {
+    assert.throws(
+        () =>
+            assertAllowedQuery(
+                "SELECT * FROM `team-researchops-prod-01d6.umami.public_website_event` WHERE created_at >= '2026-01-01' LIMIT 1",
+            ),
+        /Only the dev project/,
+    );
 });

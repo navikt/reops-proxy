@@ -129,9 +129,15 @@ function assertAllowedQuery(rawQuery) {
 
     // Table allowlist: every `project.dataset.table` reference must be on the list.
     const tableRefs = cleaned.match(/`[a-z0-9-]+\.[a-z0-9_]+\.[a-z0-9_]+`|[a-z0-9-]+\.[a-z0-9_]+\.[a-z0-9_]+/gi) || [];
+    const expectedProject = process.env.GCP_PROJECT_ID || DEFAULT_PROJECT_ID;
     for (const ref of tableRefs) {
         const bare = ref.replace(/`/g, "");
-        const datasetTable = bare.split(".").slice(-2).join(".");
+        const [project, ...rest] = bare.split(".");
+        // Hard boundary: this proxy's token must never be usable to read PROD data.
+        // The proxy's SA only has dev access anyway — this turns the IAM denial into a
+        // clear, intentional 400 instead of a confusing 500.
+        if (project !== expectedProject) invalid(`Only the dev project (${expectedProject}) is queryable here, got: ${project}`);
+        const datasetTable = rest.join(".");
         if (!ALLOWED_TABLES.includes(datasetTable)) invalid(`Table not allowlisted: ${bare}`);
     }
 }
@@ -148,8 +154,27 @@ function getBigQuery() {
     return bigqueryClient;
 }
 
-async function estimateCostUsd(query) {
-    const [job] = await getBigQuery().createQueryJob({ query, location: LOCATION, dryRun: true });
+// ISO-8601 with time component, e.g. 2026-08-08T00:00:00.000Z — the shape innblikk-frontend
+// sends for @startDate/@endDate. Over the JSON HTTP boundary these arrive as plain strings,
+// and the BigQuery client then types them STRING — which breaks queries using the same param
+// in both TIMESTAMP(x) and raw-timestamp contexts ("used assuming different types"). Re-typing
+// them explicitly as TIMESTAMP matches what the direct client library path effectively does.
+const ISO_DATETIME = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
+function coerceParams(params) {
+    if (!params || typeof params !== "object" || Array.isArray(params)) return params;
+    const coerced = {};
+    for (const [key, value] of Object.entries(params)) {
+        if (typeof value === "string" && ISO_DATETIME.test(value)) {
+            coerced[key] = BigQuery.timestamp(value);
+        } else {
+            coerced[key] = value;
+        }
+    }
+    return coerced;
+}
+
+async function estimateCostUsd(query, params) {
+    const [job] = await getBigQuery().createQueryJob({ query, location: LOCATION, params, dryRun: true });
     const bytes = parseInt(job.metadata.statistics.totalBytesProcessed, 10);
     return (bytes / 1024 ** 4) * COST_PER_TB_USD;
 }
@@ -165,6 +190,7 @@ const WEBSITES_QUERY = `
     FROM \`${DEFAULT_PROJECT_ID}.umami.public_website\`
     WHERE deleted_at IS NULL
       AND name IS NOT NULL
+      AND created_at >= '2000-01-01'
     GROUP BY website_id
     ORDER BY name
 `;
@@ -213,12 +239,13 @@ function registerBigQueryRoutes(app) {
             } catch (validationErr) {
                 return res.status(400).json({ error: validationErr.message });
             }
+            const typedParams = coerceParams(params);
             try {
                 if (dryRun) {
                     const [job] = await getBigQuery().createQueryJob({
                         query,
                         location: LOCATION,
-                        params,
+                        params: typedParams,
                         dryRun: true,
                     });
                     const bytes = parseInt(job.metadata.statistics.totalBytesProcessed, 10);
@@ -228,7 +255,7 @@ function registerBigQueryRoutes(app) {
                         estimatedCostUsd: (bytes / 1024 ** 4) * COST_PER_TB_USD,
                     });
                 }
-                const estimatedCostUsd = await estimateCostUsd(query);
+                const estimatedCostUsd = await estimateCostUsd(query, typedParams);
                 if (estimatedCostUsd > COST_CAP_USD) {
                     return res.status(413).json({
                         error: `Spørringen er for dyr for dev-passthrough (estimert $${estimatedCostUsd.toFixed(2)}, grense $${COST_CAP_USD})`,
@@ -238,7 +265,7 @@ function registerBigQueryRoutes(app) {
                 const [rows] = await getBigQuery().query({
                     query,
                     location: LOCATION,
-                    params,
+                    params: typedParams,
                     maximumBytesBilled: MAX_BYTES_BILLED,
                 });
                 console.log(`[BigQuery] /bigquery/query -> ${rows.length} rows (est $${estimatedCostUsd.toFixed(4)})`);
