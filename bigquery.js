@@ -33,7 +33,16 @@ const DEFAULT_PROJECT_ID = "team-researchops-dev-4396";
 
 // Only these tables/views may be referenced — the ReOps event-pipeline schema we know.
 // Compared against the trailing `dataset.table` of every fully-qualified reference.
-const ALLOWED_TABLES = ["umami.public_website", "umami_views.event", "umami_views.session", "umami_views.event_data"];
+const ALLOWED_TABLES = [
+    "umami.public_website",
+    "umami.public_website_event",
+    "umami.public_session",
+    "umami.public_session_data",
+    "umami.public_event_data",
+    "umami_views.event",
+    "umami_views.session",
+    "umami_views.event_data",
+];
 
 function isActive() {
     const token = process.env.DEV_LOCAL_AUTH_TOKEN;
@@ -191,8 +200,13 @@ function registerBigQueryRoutes(app) {
         express.json({ limit: "256kb" }),
         async (req, res) => {
             const query = req.body?.query;
+            const params = req.body?.params;
+            const dryRun = req.body?.dryRun === true;
             if (typeof query !== "string" || !query.trim()) {
                 return res.status(400).json({ error: "Mangler query (string) i request body" });
+            }
+            if (params !== undefined && (typeof params !== "object" || params === null || Array.isArray(params))) {
+                return res.status(400).json({ error: "params må være et objekt (navn → verdi)" });
             }
             try {
                 assertAllowedQuery(query);
@@ -200,6 +214,20 @@ function registerBigQueryRoutes(app) {
                 return res.status(400).json({ error: validationErr.message });
             }
             try {
+                if (dryRun) {
+                    const [job] = await getBigQuery().createQueryJob({
+                        query,
+                        location: LOCATION,
+                        params,
+                        dryRun: true,
+                    });
+                    const bytes = parseInt(job.metadata.statistics.totalBytesProcessed, 10);
+                    return res.json({
+                        dryRun: true,
+                        totalBytesProcessed: bytes,
+                        estimatedCostUsd: (bytes / 1024 ** 4) * COST_PER_TB_USD,
+                    });
+                }
                 const estimatedCostUsd = await estimateCostUsd(query);
                 if (estimatedCostUsd > COST_CAP_USD) {
                     return res.status(413).json({
@@ -210,6 +238,7 @@ function registerBigQueryRoutes(app) {
                 const [rows] = await getBigQuery().query({
                     query,
                     location: LOCATION,
+                    params,
                     maximumBytesBilled: MAX_BYTES_BILLED,
                 });
                 console.log(`[BigQuery] /bigquery/query -> ${rows.length} rows (est $${estimatedCostUsd.toFixed(4)})`);

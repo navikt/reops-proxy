@@ -127,7 +127,7 @@ test("query route rejects SELECT over non-allowlisted table", async () => {
             method: "POST",
             headers: { authorization: `Bearer ${TOKEN}`, "content-type": "application/json" },
             body: JSON.stringify({
-                query: "SELECT * FROM `team-researchops-prod-01d6.umami.public_website_event` LIMIT 1",
+                query: "SELECT * FROM `team-researchops-dev-4396.custom_dataset.secret_table` LIMIT 1",
             }),
         });
         assert.equal(res.status, 400);
@@ -143,6 +143,19 @@ test("query route 400s on missing query body", async () => {
             method: "POST",
             headers: { authorization: `Bearer ${TOKEN}`, "content-type": "application/json" },
             body: JSON.stringify({}),
+        });
+        assert.equal(res.status, 400);
+    });
+    clearEnv();
+});
+
+test("query route 400s on non-object params", async () => {
+    setEnv();
+    await withServer(buildApp(), async (base) => {
+        const res = await fetch(`${base}/bigquery/query`, {
+            method: "POST",
+            headers: { authorization: `Bearer ${TOKEN}`, "content-type": "application/json" },
+            body: JSON.stringify({ query: "SELECT 1", params: ["not", "an", "object"] }),
         });
         assert.equal(res.status, 400);
     });
