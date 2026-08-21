@@ -35,8 +35,8 @@ spec:
   ingresses:
     - https://reops-proxy.intern.dev.nav.no
     - https://reops-proxy.ansatt.dev.nav.no
-    # Non-SSO ingress for server-to-server calls (Innblikk local dev). Token-gated by bigquery.js.
-    - https://reops-proxy.dev.nav.no
+    # Public, no platform auth gate — server-to-server only, token-gated by bigquery.js.
+    - https://reops-proxy.ekstern.dev.nav.no
   liveness:
     path: /isAlive
     initialDelay: 20
