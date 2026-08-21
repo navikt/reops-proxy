@@ -2,10 +2,10 @@ require("dotenv").config();
 const express = require('express');
 const axios = require('axios');
 const cors = require("cors");
+const registerBigQueryRoutes = require("./bigquery");
 let app = express();
 
-app.use(cors());
-app.use('/siteimprove', (req, res) => {
+app.use('/siteimprove', cors(), (req, res) => {
     const apiUrl = "https://api.siteimprove.com/v2";
 
     if (req.url.includes('users')) {
@@ -37,6 +37,9 @@ app.use('/siteimprove', (req, res) => {
             });
         });
 });
+
+// Guarded BigQuery passthrough (dev-only, static token) — see bigquery.js
+registerBigQueryRoutes(app);
 
 app.get("/isAlive", (req, res) => res.sendStatus(200));
 app.get("/isReady", (req, res) => res.sendStatus(200));

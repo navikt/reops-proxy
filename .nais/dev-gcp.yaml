@@ -30,6 +30,8 @@ spec:
         - host: siteimprove.com
         - host: nav.no
         - host: raw.githubusercontent.com
+        - host: bigquery.googleapis.com
+        - host: oauth2.googleapis.com
   ingresses:
     - https://reops-proxy.intern.dev.nav.no
     - https://reops-proxy.ansatt.dev.nav.no
@@ -39,8 +41,16 @@ spec:
   readiness:
     path: /isReady
     initialDelay: 20
+  # Dev-only guarded BigQuery passthrough — see bigquery.js. Never mount these in prod.
+  envFrom:
+    - secret: umami-bigquery
+    - secret: innblikk-dev-local-token
   env:
     - name: SITEIMPROVE
       value: {{SITEIMPROVE}}
     - name: REOPS
       value: {{REOPS}}
+    - name: GCP_PROJECT_ID
+      value: "team-researchops-dev-4396"
+    - name: NAIS_CLUSTER_NAME
+      value: "dev-gcp"

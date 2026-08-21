@@ -18,6 +18,7 @@ Use `pnpm run dev` if you prefer to run with `nodemon` for hot reloads.
 # APIer
 
 - Siteimprove
+- BigQuery (kun dev — bevoktet passthrough for Innblikk "bane A" lokal kjøring, se under)
 
 ## Proxy endepunkter
 
@@ -50,6 +51,18 @@ Inkluderer tilgang til samtlige av Siteimprove sine api endepunkt med GET reques
 ### Dokumentasjon
 
 [Siteimprove API Dokumentasjon](https://api.siteimprove.com/v2/documentation)
+
+## BigQuery (kun dev-gcp)
+
+Bevoktet, read-only passthrough til dev-BigQuery, laget for Innblikk-frontend sin
+"bane A" lokalkjøring (uten GCP-legitimasjon). Autentisering: delt dev-only statisk token
+(`Authorization: Bearer <token>`, samme secret `innblikk-dev-local-token` som
+innblikk-backend bruker). Ruter 404-er uten token satt, eller på prod-cluster.
+
+- `GET /bigquery/websites` — registrerte nettsider
+- `POST /bigquery/query` — ad-hoc read-only spørringer (whitelist-validert, kostnadscap)
+
+Detaljer om validering, kostnadsgrenser og rate limiting: se `bigquery.js`.
 
 ### Data format
 
