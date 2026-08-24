@@ -129,14 +129,13 @@ function assertAllowedQuery(rawQuery) {
 
     // Table allowlist: every `project.dataset.table` reference must be on the list.
     const tableRefs = cleaned.match(/`[a-z0-9-]+\.[a-z0-9_]+\.[a-z0-9_]+`|[a-z0-9-]+\.[a-z0-9_]+\.[a-z0-9_]+/gi) || [];
-    const expectedProject = process.env.GCP_PROJECT_ID || DEFAULT_PROJECT_ID;
     for (const ref of tableRefs) {
         const bare = ref.replace(/`/g, "");
         const [project, ...rest] = bare.split(".");
         // Hard boundary: this proxy's token must never be usable to read PROD data.
         // The proxy's SA only has dev access anyway — this turns the IAM denial into a
         // clear, intentional 400 instead of a confusing 500.
-        if (project !== expectedProject) invalid(`Only the dev project (${expectedProject}) is queryable here, got: ${project}`);
+        if (project !== DEFAULT_PROJECT_ID) invalid(`Only the dev project (${DEFAULT_PROJECT_ID}) is queryable here, got: ${project}`);
         const datasetTable = rest.join(".");
         if (!ALLOWED_TABLES.includes(datasetTable)) invalid(`Table not allowlisted: ${bare}`);
     }
@@ -145,12 +144,11 @@ function assertAllowedQuery(rawQuery) {
 let bigqueryClient = null;
 function getBigQuery() {
     if (bigqueryClient) return bigqueryClient;
-    const projectId = process.env.GCP_PROJECT_ID || DEFAULT_PROJECT_ID;
     const rawCredentials = process.env["bigquery-credentials"];
     if (!rawCredentials) {
         throw new Error("bigquery-credentials env var not set — umami-bigquery secret not mounted?");
     }
-    bigqueryClient = new BigQuery({ projectId, credentials: JSON.parse(rawCredentials) });
+    bigqueryClient = new BigQuery({ projectId: DEFAULT_PROJECT_ID, credentials: JSON.parse(rawCredentials) });
     return bigqueryClient;
 }
 
@@ -198,10 +196,8 @@ const WEBSITES_QUERY = `
 function registerBigQueryRoutes(app) {
     app.get("/bigquery/websites", requireDevToken, bigQueryRateLimiter, async (req, res) => {
         try {
-            const projectId = process.env.GCP_PROJECT_ID || DEFAULT_PROJECT_ID;
-            const query = WEBSITES_QUERY.replace(DEFAULT_PROJECT_ID, projectId);
             const [rows] = await getBigQuery().query({
-                query,
+                query: WEBSITES_QUERY,
                 location: LOCATION,
                 maximumBytesBilled: MAX_BYTES_BILLED,
             });

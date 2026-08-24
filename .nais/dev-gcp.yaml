@@ -52,7 +52,5 @@ spec:
       value: {{SITEIMPROVE}}
     - name: REOPS
       value: {{REOPS}}
-    - name: GCP_PROJECT_ID
-      value: "team-researchops-dev-4396"
     - name: NAIS_CLUSTER_NAME
       value: "dev-gcp"
