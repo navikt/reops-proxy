@@ -22,7 +22,7 @@ spec:
           namespace: arbeidsgiver-data
         - application: memu-data
           namespace: fugl-fonix
-        - application: umami-start
+        - application: reops-innblikk-frontend
     outbound:
       external:
         - host: api.siteimprove.com
