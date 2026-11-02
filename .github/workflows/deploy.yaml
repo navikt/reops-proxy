@@ -14,6 +14,7 @@ on:
         options:
           - dev
           - prod
+          - prod-rebuild
 
 jobs:
   build:
@@ -39,7 +40,7 @@ jobs:
 
   build-prod-rebuild:
     name: Rebuild last prod release on fresh base image
-    if: github.event_name == 'schedule'
+    if: github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod-rebuild')
     runs-on: ubuntu-latest
     environment: production
     permissions:
@@ -105,7 +106,7 @@ jobs:
           VARS: .nais/dev-vars.yaml
 
   deploy-prod:
-    if: ${{ !cancelled() && needs.build.result == 'success' && ((github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod') || (github.event_name == 'schedule' && needs.build-prod-rebuild.result == 'success')) }}
+    if: ${{ !cancelled() && needs.build.result == 'success' && ((github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod') || ((github.event_name == 'schedule' || github.event.inputs.environment == 'prod-rebuild') && needs.build-prod-rebuild.result == 'success')) }}
     name: Deploy to prod-gcp
     needs: [build, build-prod-rebuild]
     environment: production
@@ -132,7 +133,7 @@ jobs:
           VAR: image=${{ needs.build-prod-rebuild.outputs.image || needs.build.outputs.image }},version=${{ needs.build-prod-rebuild.outputs.sha || github.sha }}
           VARS: .nais/prod-vars.yaml
       - name: "Create deployment tag"
-        if: success() && github.event_name != 'schedule'
+        if: success() && needs.build-prod-rebuild.result != 'success'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
