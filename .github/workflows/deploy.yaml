@@ -3,6 +3,8 @@ name: Deploy to gcp
 on:
   push:
     branches: [ master ]
+  schedule:
+    - cron: "0 4 * * *"
   workflow_dispatch:
     inputs:
       environment:
@@ -36,7 +38,7 @@ jobs:
       image: ${{ steps.docker-build-push.outputs.image }}
 
   deploy-dev:
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
+    if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
     name: Deploy to dev-gcp
     needs: build
     environment: production
