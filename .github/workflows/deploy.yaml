@@ -37,6 +37,47 @@ jobs:
     outputs:
       image: ${{ steps.docker-build-push.outputs.image }}
 
+  build-prod-rebuild:
+    name: Rebuild last prod release on fresh base image
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      packages: write
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - name: Resolve latest prod tag
+        id: tag
+        run: |
+          TAG="$(git tag -l 'prod-*' --sort=-creatordate | head -n 1)"
+          if [ -z "$TAG" ]; then
+            echo "::error ::No prod-* tag found"
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "sha=$(git rev-list -n 1 "$TAG")" >> "$GITHUB_OUTPUT"
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ steps.tag.outputs.tag }}
+      - name: 'Build and push'
+        uses: nais/docker-build-push@v0
+        id: docker-build-push
+        with:
+          team: team-researchops
+          identity_provider: ${{ secrets.NAIS_WORKLOAD_IDENTITY_PROVIDER }}
+          project_id: ${{ vars.NAIS_MANAGEMENT_PROJECT_ID }}
+          no_cache: true
+
+    outputs:
+      image: ${{ steps.docker-build-push.outputs.image }}
+      tag: ${{ steps.tag.outputs.tag }}
+      sha: ${{ steps.tag.outputs.sha }}
+
   deploy-dev:
     if: github.event_name == 'push' || github.event_name == 'schedule' || (github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'dev')
     name: Deploy to dev-gcp
@@ -64,9 +105,9 @@ jobs:
           VARS: .nais/dev-vars.yaml
 
   deploy-prod:
-    if: github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod'
+    if: ${{ !cancelled() && needs.build.result == 'success' && ((github.event_name == 'workflow_dispatch' && github.event.inputs.environment == 'prod') || (github.event_name == 'schedule' && needs.build-prod-rebuild.result == 'success')) }}
     name: Deploy to prod-gcp
-    needs: build
+    needs: [build, build-prod-rebuild]
     environment: production
     runs-on: ubuntu-latest
     permissions:
@@ -75,6 +116,8 @@ jobs:
     steps:
       - name: Checkout branch
         uses: actions/checkout@v6
+        with:
+          ref: ${{ needs.build-prod-rebuild.outputs.tag || github.sha }}
       - name: Generate nais variables
         run: |
           cat > .nais/prod-vars.yaml <<EOF
@@ -86,10 +129,10 @@ jobs:
         env:
           CLUSTER: prod-gcp
           RESOURCE: .nais/prod-gcp.yaml
-          VAR: image=${{ needs.build.outputs.image }},version=${{ github.sha }}
+          VAR: image=${{ needs.build-prod-rebuild.outputs.image || needs.build.outputs.image }},version=${{ needs.build-prod-rebuild.outputs.sha || github.sha }}
           VARS: .nais/prod-vars.yaml
       - name: "Create deployment tag"
-        if: success()
+        if: success() && github.event_name != 'schedule'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
